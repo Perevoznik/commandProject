@@ -1,0 +1,77 @@
+﻿@model IEnumerable<App.BLL.Models.SubdivisionDTO>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Subdivisions</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create", new { id = 0 }, new { @class = "btn btn-sm btn-success" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SubdivisionName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubdivisionName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.SubdivisionId }, new { @class = "btn btn-sm btn-primary" }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.SubdivisionId }, new { @class = "del_subdiv btn btn-sm btn-danger",
+                  subdivid = item.SubdivisionId})
+            </td>
+        </tr>
+    }
+
+</table>
+
+@section MyScript
+{
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('.del_subdiv').click(function (e) {
+
+                e.preventDefault();
+                let id = $(this).attr('subdivid');
+
+                if (confirm("Вы уверены ?")) {
+
+                    $.ajax({
+
+                        url: "@Url.Action("Delete", "Subdivision")",
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (data) {
+
+                            if (data == 'OK')
+                                window.location.href = "@Url.Action("Index", "Subdivision")";
+                            else
+                                alert('При удалении произошла ошибка');
+
+                        },
+                        error: function (data) {
+                            alert(data);
+                        }
+
+                    });
+
+                }
+
+            });
+
+        });
+
+    </script>
+
+}

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<App.BLL.Models.StreetDTO>
+
+@{
+    ViewBag.Title = "Streets";
+}
+
+<h2>Streets</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Edit", new { id = 0 }, new { @class = "btn btn-sm btn-success" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.StreetName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.StreetName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.StreetId }, new { @class = "btn btn-sm btn-primary" }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.StreetId }, new { @class = "del_street btn btn-sm btn-danger",
+                    streetid = item.StreetId})
+            </td>
+        </tr>
+    }
+
+</table>
+
+@section MyScript
+{
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('.del_street').click(function (e) {
+
+                e.preventDefault();
+                let id = $(this).attr('streetid');
+
+                if (confirm("Вы уверены ?")) {
+
+                    $.ajax({
+
+                        url: "@Url.Action("Delete", "Street")",
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (data) {
+
+                            if (data == 'OK')
+                                window.location.href = "@Url.Action("Index", "Street")";
+                            else
+                                alert('При удалении произошла ошибка');
+
+                        },
+                        error: function (data) {
+                            alert(data);
+                        }
+
+                    });
+
+                }
+
+            });
+
+        });
+
+    </script>
+
+}
